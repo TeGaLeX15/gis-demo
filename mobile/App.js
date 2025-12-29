@@ -1,13 +1,4 @@
-import { View } from 'react-native';
-import { WebView } from 'react-native-webview';
-
+import AppNavigator from './src/navigation/AppNavigator';
 export default function App() {
-  return (
-    <View style={{ flex: 1 }}>
-      <WebView
-        source={{ uri: 'http://192.168.1.64:8080/map.html' }}
-        javaScriptEnabled
-      />
-    </View>
-  );
+  return <AppNavigator />;
 }

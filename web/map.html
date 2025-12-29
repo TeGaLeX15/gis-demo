@@ -1,44 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>Leaflet GIS</title>
-
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <style>
-    html, body, #map {
-      height: 100%;
-      margin: 0;
-    }
-  </style>
+<meta charset="utf-8" />
+<title>Leaflet GIS</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html, body, #map { height: 100%; margin: 0; }
+</style>
 </head>
 <body>
 <div id="map"></div>
 
 <script>
   const map = L.map('map').setView([51.1605, 71.4704], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
-
-  fetch('http://192.168.1.64:3000/api/points')
-    .then(res => res.json())
-    .then(data => {
-      L.geoJSON(data, {
-        onEachFeature: (feature, layer) => {
-          layer.bindPopup(
-            `<strong>${feature.properties.title}</strong><br/>
-             ${feature.properties.description}`
-          );
-        }
-      }).addTo(map);
+  async function loadPoints(token) {
+    console.log('Token inside WebView:', token);
+    if (!token) return console.warn('Token missing!');
+    console.log('Token received in WebView:', token);
+    const res = await fetch('http://192.168.1.64:3000/api/points', {
+      headers: { 'Authorization': 'Bearer ' + token }
     });
+    const data = await res.json();
+    console.log('Points loaded:', data);
+    L.geoJSON(data, {
+      onEachFeature: (feature, layer) => {
+        layer.bindPopup(`<strong>${feature.properties.title}</strong><br/>${feature.properties.description}`);
+      }
+    }).addTo(map);
+  }
 </script>
 </body>
 </html>
