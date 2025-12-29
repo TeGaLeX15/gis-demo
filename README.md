@@ -1,162 +1,69 @@
 # GIS Demo - React Native + Leaflet + Express
 
-Простой проект для демонстрации работы с картами в мобильных приложениях через **React Native WebView**, **Leaflet** и **REST API**.
+Простой проект для демонстрации работы с картами в мобильных приложениях через React Native WebView, Leaflet и REST API.
 
 ---
 
 ## Структура проекта
 
-```
-gis-demo/
-├─ backend/       # Node.js + Express API
-├─ web/           # Leaflet карта
-├─ mobile/        # React Native приложение
-├─ screenshots/   # Скриншоты с телефона
-├─ .gitignore
-└─ README.md
-```
+* **backend/** – Node.js + Express API, хранение точек, авторизация и JWT.
+* **web/** – Leaflet карта, отображение точек с backend, popup с названием и описанием.
+* **mobile/** – React Native приложение с WebView для карты, регистрация и вход, хранение токена.
+* **screenshots/** – Скриншоты экранов мобильного приложения.
+* **.gitignore** – Исключения для node_modules, Expo, IDE и env-файлов.
+* **README.md** – документация проекта.
 
 ---
 
 ## Backend
 
-* Node.js + Express
-* REST API: `/api/points` возвращает точки в формате GeoJSON
+* Реализован на Node.js + Express.
+* REST API возвращает точки в формате GeoJSON.
+* Реализована авторизация через JWT.
+* Токен проверяется на защищённых эндпоинтах.
+* Хранение временных пользователей и точек.
 
-Запуск:
+---
 
-```bash
-cd backend
-node index.js
-```
+## Авторизация и JWT
 
-API доступен на:
-
-```
-http://<IP_ПК>:3000/api/points
-```
-
-Пример ответа:
-
-```json
-{
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "properties": {
-        "title": "Центр Астаны",
-        "description": "Первая точка"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [71.4704, 51.1605]
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "title": "Вторая точка",
-        "description": "Ещё одна локация"
-      },
-      "geometry": {
-        "type": "Point",
-        "coordinates": [71.4800, 51.1650]
-      }
-    }
-  ]
-}
-```
+* Регистрация и вход пользователей с генерацией JWT.
+* Токен используется для получения данных с защищённых API.
+* На мобильном устройстве токен хранится для автоматической загрузки точек после входа.
 
 ---
 
 ## Web (Leaflet карта)
 
-* Leaflet + OpenStreetMap
-* Загружает точки с бекенда
-* Popup с названием и описанием
-
-Запуск:
-
-```bash
-cd web
-npx http-server -p 8080
-```
-
-Карта доступна на:
-
-```
-http://<IP_ПК>:8080/map.html
-```
-
-Пример fetch для точек:
-
-```js
-fetch('http://<IP_ПК>:3000/api/points')
-  .then(res => res.json())
-  .then(data => {
-    L.geoJSON(data, {
-      onEachFeature: (feature, layer) => {
-        layer.bindPopup(
-          `<strong>${feature.properties.title}</strong><br/>
-           ${feature.properties.description}`
-        );
-      }
-    }).addTo(map);
-  });
-```
+* Leaflet карта с OpenStreetMap.
+* Загружает точки с backend.
+* Отображает popup с названием и описанием каждой точки.
+* Токен передаётся через WebView для доступа к защищённым данным.
 
 ---
 
 ## Mobile (React Native + WebView)
 
-* Expo + WebView
-* Загружает web карту с backend
-
-`App.js` пример:
-
-```js
-import { View } from 'react-native';
-import { WebView } from 'react-native-webview';
-
-export default function App() {
-  return (
-    <View style={{ flex: 1 }}>
-      <WebView
-        source={{ uri: 'http://<IP_ПК>:8080/map.html' }}
-        javaScriptEnabled
-      />
-    </View>
-  );
-}
-```
-
-Запуск:
-
-```bash
-cd mobile
-npx expo start
-```
-
-* Сканируй QR код в Expo Go
-* Или запускай на эмуляторе (`a` для Android, `i` для iOS)
+* Используется Expo и WebView для отображения карты.
+* Реализованы регистрация и вход пользователей.
+* JWT токен хранится на устройстве для последующих запросов к API.
+* Возможность отображения карты с точками сразу после входа.
 
 ---
 
-## Скринов с телефона
+## Скриншоты
 
-> Скриншот экранов регистрации и карты на мобильном устройстве:
-
+* Скриншоты экранов регистрации и карты на мобильном устройстве находятся в папке `screenshots`.
 ![RegisterScreen](screenshots/register.png)
-![Map on Phone 1](screenshots/map.png)
+![MapScreen](screenshots/map.png)
 
 ---
 
 ## Примечания
 
-* Всегда использовать **IP компьютера**, а не `localhost`, чтобы WebView и fetch работали на телефоне
-* Все зависимости указаны в `package.json`
-* `.gitignore` настроен для `node_modules`, Expo, IDE и env-файлов
-* Проект полностью рабочий: **карта на мобильном с точками из backend**
+* Всегда использовать IP компьютера, а не localhost, чтобы WebView и fetch работали на телефоне.
+* Все зависимости указаны в `package.json`.
+* Проект полностью рабочий: карта на мобильном с точками из backend.
+* Токен на мобильном устройстве обеспечивает авторизованный доступ к данным.
 
 ---
