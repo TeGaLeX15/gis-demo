@@ -1,0 +1,33 @@
+# ===== System =====
+.DS_Store
+Thumbs.db
+
+# ===== Node =====
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ===== Environment =====
+.env
+.env.local
+.env.*.local
+
+# ===== Expo / React Native =====
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# ===== Android / iOS (на будущее) =====
+android/
+ios/
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+
+# ===== Logs =====
+logs/
+*.log
