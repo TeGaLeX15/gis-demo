@@ -5,7 +5,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <WebView
-        source={{ uri: 'http://192.168.1.64/web/map.html' }}
+        source={{ uri: 'http://192.168.1.64:8080/map.html' }}
         javaScriptEnabled
       />
     </View>
