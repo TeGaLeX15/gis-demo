@@ -145,8 +145,9 @@ npx expo start
 
 ## Скринов с телефона
 
-> Скриншот работы карты на мобильном устройстве:
+> Скриншот экранов регистрации и карты на мобильном устройстве:
 
+![RegisterScreen](screenshots/register.png)
 ![Map on Phone 1](screenshots/map.png)
 
 ---
